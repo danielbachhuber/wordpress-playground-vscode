@@ -4,22 +4,26 @@ import * as vscode from 'vscode';
 const http = require('http');
 import { PHP, PHPServer, loadPHPRuntime, getPHPLoaderModule } from '@php-wasm/node';
 
+async function loadPhpServer() {
+	const phpLoaderModule = await getPHPLoaderModule('8.0');
+	const loaderId = await loadPHPRuntime(phpLoaderModule);
+	const php = new PHP(loaderId);
+	const phpServer = new PHPServer(php, {
+		documentRoot: '/Users/danielbachhuber/projects/wordpress-playground-local',
+		absoluteUrl: 'http://localhost:5401/scope:5/'
+	});
+	return phpServer;
+}
+
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	let disposable = vscode.commands.registerCommand('wordpress-playground.iframePlayground', () => {
+	let disposable = vscode.commands.registerCommand('wordpress-playground.iframePlayground', async () => {
 
-		let phpServer;
+		let phpServer = await loadPhpServer();
 
 		const server = http.createServer( async (req, res) => {
 			res.statusCode = 200;
-			const phpLoaderModule = await getPHPLoaderModule('8.0');
-			const loaderId = await loadPHPRuntime(phpLoaderModule);
-			const php = new PHP(loaderId);
-			phpServer = new PHPServer(php, {
-				documentRoot: '/Users/danielbachhuber/projects/wordpress-playground-local',
-				absoluteUrl: 'http://localhost:5401/scope:5/'
-			});
 			const resp = await phpServer.request({relativeUrl: '/index.php/wp-admin/setup-config.php'});
 			res.setHeader('Content-Type', 'text/html');
 			res.end(resp.body);

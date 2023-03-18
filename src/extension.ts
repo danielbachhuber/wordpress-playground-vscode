@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 const http = require('http');
 import { PHP, PHPServer, loadPHPRuntime, getPHPLoaderModule } from './built-php-wasm-node';
 
-async function loadPhpServer( context ) {
+async function loadPhpServer(context: vscode.ExtensionContext) {
 	const phpLoaderModule = await getPHPLoaderModule('8.0');
 	const loaderId = await loadPHPRuntime(phpLoaderModule);
 	const php = new PHP(loaderId);

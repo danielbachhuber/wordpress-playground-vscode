@@ -15,7 +15,7 @@ async function loadPhpServer( context ) {
 		documentRoot: context.extensionPath + '/dist/wordpress',
 		absoluteUrl: 'http://localhost:5401/scope:5/',
 		isStaticFilePath: (path: string) => {
-			return php.fileExists('/Users/danielbachhuber/projects/wordpress-playground-local'+path);
+			return php.fileExists(context.extensionPath + 'path');
 		}
 	});
 	return phpServer;
@@ -33,12 +33,11 @@ export function activate(context: vscode.ExtensionContext) {
 		// database into the virtual filesystem.
 
 		const server = http.createServer( async (req, res) => {
-			// TODO need to pass the proper request to phpServer,
-			// and then return the correct response headers.
-			// Also need to handle redirects.
-			res.statusCode = 200;
-			const resp = await phpServer.request({relativeUrl: '/index.php/wp-admin/setup-config.php'});
-			res.setHeader('Content-Type', 'text/html');
+			const resp = await phpServer.request({relativeUrl: req.url});
+			res.statusCode = resp.httpStatusCode;
+			Object.keys(resp.headers).forEach((key) => {
+				res.setHeader(key, resp.headers[key]);
+			});
 			res.end(resp.body);
 		});
 
@@ -77,7 +76,7 @@ export function activate(context: vscode.ExtensionContext) {
 			  </style>
 			</head>
 			<body>
-			  <iframe src="http://localhost:5401"></iframe>
+			  <iframe src="http://localhost:5401/scope:5/index.php"></iframe>
 			</body>
 		  </html>
 		`;

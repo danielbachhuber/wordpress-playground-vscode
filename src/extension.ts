@@ -8,6 +8,9 @@ async function loadPhpServer( context ) {
 	const phpLoaderModule = await getPHPLoaderModule('8.0');
 	const loaderId = await loadPHPRuntime(phpLoaderModule);
 	const php = new PHP(loaderId);
+	// TODO Instead of mounting WordPress to documentRoot,
+	// we need to load all WordPress files into the virtual filesystem,
+	// and then mount the project directory as a plugin into the filesystem.
 	const phpServer = new PHPServer(php, {
 		documentRoot: context.extensionPath + '/dist/wordpress',
 		absoluteUrl: 'http://localhost:5401/scope:5/',
@@ -25,7 +28,14 @@ export function activate(context: vscode.ExtensionContext) {
 
 		let phpServer = await loadPhpServer( context );
 
+		// TODO generate a wp-config and install WordPress.
+		// wp-config.php can be hardcoded and we can also directly load a sqlite
+		// database into the virtual filesystem.
+
 		const server = http.createServer( async (req, res) => {
+			// TODO need to pass the proper request to phpServer,
+			// and then return the correct response headers.
+			// Also need to handle redirects.
 			res.statusCode = 200;
 			const resp = await phpServer.request({relativeUrl: '/index.php/wp-admin/setup-config.php'});
 			res.setHeader('Content-Type', 'text/html');

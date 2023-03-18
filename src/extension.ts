@@ -5,21 +5,36 @@ import * as vscode from 'vscode';
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+	let disposable = vscode.commands.registerCommand('wordpress-playground.iframePlayground', () => {
+		// Create a new webview panel
+		const panel = vscode.window.createWebviewPanel(
+		  'playgroundviewer',
+		  'Playground',
+		  vscode.ViewColumn.One,
+		  {
+			enableScripts: true,
+		  }
+		);
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "wordpress-playground" is now active!');
+		// Set the content of the webview panel to an iframe that loads a website URL
+		panel.webview.html = `
+		  <!DOCTYPE html>
+		  <html>
+			<head>
+			  <meta charset="UTF-8">
+			  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; frame-src 'self'">
+			  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+			  <title>Playground</title>
+			</head>
+			<body>
+			<h1>Hello World</h1>
+			  <iframe src="https://www.example.com/" width="100%" height="100%"></iframe>
+			</body>
+		  </html>
+		`;
+	  });
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('wordpress-playground.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from WordPress Playground!');
-	});
-
-	context.subscriptions.push(disposable);
+	  context.subscriptions.push( disposable );
 }
 
 // This method is called when your extension is deactivated

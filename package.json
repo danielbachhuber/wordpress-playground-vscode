@@ -13,10 +13,10 @@
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "wordpress-playground.helloWorld",
-        "title": "Hello World"
-      }
+	  {
+		"command": "wordpress-playground.iframePlayground",
+		"title": "Launch Playground"
+	  }
     ]
   },
   "scripts": {

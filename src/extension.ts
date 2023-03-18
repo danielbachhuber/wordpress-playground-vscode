@@ -4,12 +4,12 @@ import * as vscode from 'vscode';
 const http = require('http');
 import { PHP, PHPServer, loadPHPRuntime, getPHPLoaderModule } from '@php-wasm/node';
 
-async function loadPhpServer() {
+async function loadPhpServer( context ) {
 	const phpLoaderModule = await getPHPLoaderModule('8.0');
 	const loaderId = await loadPHPRuntime(phpLoaderModule);
 	const php = new PHP(loaderId);
 	const phpServer = new PHPServer(php, {
-		documentRoot: '/Users/danielbachhuber/projects/wordpress-playground-local',
+		documentRoot: context.extensionPath + '/dist/wordpress',
 		absoluteUrl: 'http://localhost:5401/scope:5/',
 		isStaticFilePath: (path: string) => {
 			return php.fileExists('/Users/danielbachhuber/projects/wordpress-playground-local'+path);
@@ -23,7 +23,7 @@ async function loadPhpServer() {
 export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('wordpress-playground.iframePlayground', async () => {
 
-		let phpServer = await loadPhpServer();
+		let phpServer = await loadPhpServer( context );
 
 		const server = http.createServer( async (req, res) => {
 			res.statusCode = 200;

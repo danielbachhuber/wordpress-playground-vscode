@@ -10,7 +10,10 @@ async function loadPhpServer() {
 	const php = new PHP(loaderId);
 	const phpServer = new PHPServer(php, {
 		documentRoot: '/Users/danielbachhuber/projects/wordpress-playground-local',
-		absoluteUrl: 'http://localhost:5401/scope:5/'
+		absoluteUrl: 'http://localhost:5401/scope:5/',
+		isStaticFilePath: (path: string) => {
+			return php.fileExists('/Users/danielbachhuber/projects/wordpress-playground-local'+path);
+		}
 	});
 	return phpServer;
 }

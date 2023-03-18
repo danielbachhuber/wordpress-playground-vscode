@@ -2,22 +2,25 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 const http = require('http');
-import { PHP, PHPServer, loadPHPRuntime, getPHPLoaderModule } from '@php-wasm/node';
+import { PHP, PHPServer, loadPHPRuntime, getPHPLoaderModule } from './built-php-wasm-node';
 
 async function loadPhpServer( context ) {
 	const phpLoaderModule = await getPHPLoaderModule('8.0');
 	const loaderId = await loadPHPRuntime(phpLoaderModule);
 	const php = new PHP(loaderId);
+	php.mkdirTree('/wordpress');
+	php.mount({root: context.extensionPath + '/dist/wordpress'} as any, '/wordpress');
 	// TODO Instead of mounting WordPress to documentRoot,
 	// we need to load all WordPress files into the virtual filesystem,
 	// and then mount the project directory as a plugin into the filesystem.
 	const phpServer = new PHPServer(php, {
-		documentRoot: context.extensionPath + '/dist/wordpress',
+		documentRoot: '/wordpress',
 		absoluteUrl: 'http://localhost:5401/scope:5/',
 		isStaticFilePath: (path: string) => {
-			return php.fileExists(context.extensionPath + 'path');
+			return php.fileExists(context.extensionPath + path);
 		}
 	});
+	
 	return phpServer;
 }
 

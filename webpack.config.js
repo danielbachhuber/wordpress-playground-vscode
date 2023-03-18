@@ -3,6 +3,7 @@
 'use strict';
 
 const path = require('path');
+const CopyPlugin = require("copy-webpack-plugin");
 
 //@ts-check
 /** @typedef {import('webpack').Configuration} WebpackConfig **/
@@ -44,5 +45,12 @@ const extensionConfig = {
   infrastructureLogging: {
     level: "log", // enables logging required for problem matchers
   },
+  plugins: [
+	new CopyPlugin({
+		patterns: [
+			{ from: "src/wordpress", to: "wordpress" },
+		]
+	})
+  ]
 };
 module.exports = [ extensionConfig ];

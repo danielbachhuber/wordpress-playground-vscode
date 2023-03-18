@@ -31,7 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
 			res.setHeader('Content-Type', 'text/html');
 			res.end(resp.body);
 		});
-		
+
 		server.listen(5401, () => {
 			console.log('Server running at http://localhost:5401/');
 		});

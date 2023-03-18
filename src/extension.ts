@@ -22,13 +22,22 @@ export function activate(context: vscode.ExtensionContext) {
 		  <html>
 			<head>
 			  <meta charset="UTF-8">
-			  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; frame-src 'self'">
 			  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 			  <title>Playground</title>
+			  <style type="text/css">
+		  		html, body, iframe {
+					height: 100%;
+					width: 100%;
+					margin: 0;
+					padding: 0;
+				}
+				iframe {
+					border: none;
+				}
+			  </style>
 			</head>
 			<body>
-			<h1>Hello World</h1>
-			  <iframe src="https://www.example.com/" width="100%" height="100%"></iframe>
+			  <iframe src="http://localhost:5400"></iframe>
 			</body>
 		  </html>
 		`;

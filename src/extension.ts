@@ -1,6 +1,8 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+const http = require('http');
+import { PHP, PHPServer, loadPHPRuntime, getPHPLoaderModule } from '@php-wasm/node';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -15,6 +17,26 @@ export function activate(context: vscode.ExtensionContext) {
 			enableScripts: true,
 		  }
 		);
+
+		let phpServer;
+
+		const server = http.createServer( async (req, res) => {
+			res.statusCode = 200;
+			const phpLoaderModule = await getPHPLoaderModule('8.0');
+			const loaderId = await loadPHPRuntime(phpLoaderModule);
+			const php = new PHP(loaderId);
+			phpServer = new PHPServer(php, {
+				documentRoot: '/Users/danielbachhuber/projects/wordpress-playground-local',
+				absoluteUrl: 'http://localhost:5401/scope:5/'
+			});
+			const resp = await phpServer.request({relativeUrl: '/index.php/wp-admin/setup-config.php'});
+			res.setHeader('Content-Type', 'text/html');
+			res.end(resp.body);
+		});
+		
+		server.listen(5401, () => {
+			console.log('Server running at http://localhost:5401/');
+		});
 
 		// Set the content of the webview panel to an iframe that loads a website URL
 		panel.webview.html = `
@@ -37,7 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
 			  </style>
 			</head>
 			<body>
-			  <iframe src="http://localhost:5400"></iframe>
+			  <iframe src="http://localhost:5401"></iframe>
 			</body>
 		  </html>
 		`;

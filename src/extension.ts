@@ -1,11 +1,28 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+const path = require('path');
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('wordpress-playground.iframePlayground', () => {
+		const getFileDir = function() {
+			const activeEditor = vscode.window.activeTextEditor;
+			if ( ! activeEditor ) {
+			  return;
+			}
+
+			const document = activeEditor.document;
+			const uri = document.uri;
+			if ( uri.scheme !== 'file' ) {
+			  return;
+			}
+
+			const filePath = uri.fsPath;
+			return path.dirname( uri.fsPath );
+		};
+
+		// vscode.window.showInformationMessage( 'File path' + getFileDir() );
+
 		// Create a new webview panel
 		const panel = vscode.window.createWebviewPanel(
 		  'playgroundviewer',

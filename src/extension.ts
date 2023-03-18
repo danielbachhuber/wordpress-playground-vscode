@@ -8,15 +8,6 @@ import { PHP, PHPServer, loadPHPRuntime, getPHPLoaderModule } from '@php-wasm/no
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('wordpress-playground.iframePlayground', () => {
-		// Create a new webview panel
-		const panel = vscode.window.createWebviewPanel(
-		  'playgroundviewer',
-		  'Playground',
-		  vscode.ViewColumn.One,
-		  {
-			enableScripts: true,
-		  }
-		);
 
 		let phpServer;
 
@@ -37,6 +28,16 @@ export function activate(context: vscode.ExtensionContext) {
 		server.listen(5401, () => {
 			console.log('Server running at http://localhost:5401/');
 		});
+
+		// Create a new webview panel
+		const panel = vscode.window.createWebviewPanel(
+			'playgroundviewer',
+			'Playground',
+			vscode.ViewColumn.One,
+			{
+			  enableScripts: true,
+			}
+		  );
 
 		// Set the content of the webview panel to an iframe that loads a website URL
 		panel.webview.html = `

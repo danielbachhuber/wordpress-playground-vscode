@@ -1,7 +1,4 @@
-- Figure out how to use extension in a project and load the local plugin into the site.
 - Allow switching between PHP and WordPress versions.
-    1. Add the fancy chrome to our existing vscode.window.createWebviewPanel
-	2. Custom form elements for switching versions (submitted to WordPress Playground)
 	3. Integrate version switching to the extension.
 - Restore network access
 - Use a unique Playground per project.

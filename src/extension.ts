@@ -1,9 +1,22 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as path from 'path';
+const fs = require('fs');
 const http = require('http');
 import { PHP, PHPServer, loadPHPRuntime, getPHPLoaderModule, PHPBrowser } from './built-php-wasm-node';
 import patchWordPress from './lib/patch-wordpress';
+import { TextDecoder } from 'util';
+
+const importPhp = `
+<?php
+function importZipFile($pathToZip) {
+    $zip = new ZipArchive;
+    $res = $zip->open($pathToZip);
+	$zip->extractTo( '/' );
+    $zip->close();
+}`;
+
 class PortFinder {
 	private static port: number = 5201;
 
@@ -57,12 +70,30 @@ async function login(
 function seemsLikeAPHPFile(path: string) {
 	return path.endsWith('.php') || path.includes('.php/');
 }
-async function loadPhpBrowser( context: vscode.ExtensionContext, openPort: number ) {
+async function loadPhpBrowser( context: vscode.ExtensionContext, openPort: number, pluginPath: string ) {
 	const phpLoaderModule = await getPHPLoaderModule('8.0');
 	const loaderId = await loadPHPRuntime(phpLoaderModule);
 	const php = new PHP(loaderId);
-	php.mkdirTree('/wordpress');
-	php.mount({root: context.extensionPath + '/dist/wordpress'} as any, '/wordpress');
+
+	const wordpressZip = fs.readFileSync( context.extensionPath + '/dist/wordpress.zip' );
+
+	php.writeFile( '/wordpress.zip', wordpressZip );
+
+	const file = php.readFileAsText( '/wordpress.zip' );
+
+	const databaseFromZipFileReadRequest = php.run({
+		code:
+		importPhp +
+			` importZipFile( '/wordpress.zip' );`,
+	});
+
+	if ( databaseFromZipFileReadRequest.exitCode !== 0 ) {
+		console.log( databaseFromZipFileReadRequest.errors );
+	}
+
+	php.mkdirTree( `/wordpress/wp-content/plugins/${path.basename( pluginPath )}` )
+	php.mount({root: pluginPath} as any, `/wordpress/wp-content/plugins/${path.basename( pluginPath )}` );
+
 	patchWordPress(php);
 
 	const phpServer = new PHPServer(php, {
@@ -85,10 +116,15 @@ async function loadPhpBrowser( context: vscode.ExtensionContext, openPort: numbe
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+	const editor = vscode.window.activeTextEditor;
+	const pluginPath = !! editor
+		? path.dirname( editor.document.fileName )
+		: '';
+
 	let disposable = vscode.commands.registerCommand('wordpress-playground.iframePlayground', async () => {
 		const openPort = await PortFinder.getOpenPort();
 
-		let phpBrowser = await loadPhpBrowser( context, openPort );
+		let phpBrowser = await loadPhpBrowser( context, openPort, pluginPath );
 
 		const server = http.createServer( async (req : any, res : any) => {
 			let requestHeaders: { [ key: string ]: string } = {};

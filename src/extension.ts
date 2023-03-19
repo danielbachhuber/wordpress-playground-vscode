@@ -4,9 +4,10 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 const fs = require('fs');
 const http = require('http');
+var url = require('url');
+
 import { PHP, PHPServer, loadPHPRuntime, getPHPLoaderModule, PHPBrowser } from './built-php-wasm-node';
 import patchWordPress from './lib/patch-wordpress';
-import { TextDecoder } from 'util';
 
 const importPhp = `
 <?php
@@ -70,8 +71,8 @@ async function login(
 function seemsLikeAPHPFile(path: string) {
 	return path.endsWith('.php') || path.includes('.php/');
 }
-async function loadPhpBrowser( context: vscode.ExtensionContext, openPort: number, pluginPath: string ) {
-	const phpLoaderModule = await getPHPLoaderModule('8.0');
+async function loadPhpBrowser( context: vscode.ExtensionContext, openPort: number, pluginPath: string,phpVersion: string='8.0') {
+	const phpLoaderModule = await getPHPLoaderModule(phpVersion);
 	const loaderId = await loadPHPRuntime(phpLoaderModule);
 	const php = new PHP(loaderId);
 
@@ -132,6 +133,13 @@ export function activate(context: vscode.ExtensionContext) {
 				for ( let i = 0; i < req.rawHeaders.length; i += 2 ) {
 					requestHeaders[ req.rawHeaders[ i ] ] = req.rawHeaders[ i + 1 ];
 				}
+			}
+			const params = url.parse(req.url, true).query;
+			const phpVersion = params.php;
+			console.log( "PHP",phpVersion, req.url, params );
+			
+			if (phpVersion) {
+				phpBrowser = await loadPhpBrowser( context, openPort, pluginPath, phpVersion); 
 			}
 
 			const reqBody = await new Promise( (resolve, reject) => {
@@ -222,6 +230,9 @@ export function activate(context: vscode.ExtensionContext) {
 			</body>
 		  </html>
 		`;
+    //var select = panel.webview.
+    ///getElementById('mySelect');
+//var value = select.options[select.selectedIndex].value;
 
 		panel.onDidDispose( () => {
 			server.close();

@@ -5,7 +5,7 @@ const http = require('http');
 import { PHP, PHPServer, loadPHPRuntime, getPHPLoaderModule, PHPBrowser } from './built-php-wasm-node';
 import patchWordPress from './lib/patch-wordpress';
 class PortFinder {
-	private static port: number = 5401;
+	private static port: number = 5201;
 
 	public static incrementPort() {
 		return this.port++;

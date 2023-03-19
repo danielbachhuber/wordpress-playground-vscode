@@ -67,7 +67,7 @@ async function loadPhpBrowser( context: vscode.ExtensionContext, openPort: numbe
 		documentRoot: '/wordpress',
 		absoluteUrl: `http://localhost:${openPort}/scope:5/`,
 		isStaticFilePath: (path: string) => {
-			const fullPath = context.extensionPath + path;
+			const fullPath = '/wordpress' + path;
 			return php.fileExists(fullPath)
 				&& ! php.isDir(fullPath)
 				&& ! seemsLikeAPHPFile(fullPath);

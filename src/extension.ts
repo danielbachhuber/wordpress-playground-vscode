@@ -20,7 +20,7 @@ async function loadPhpServer( context ) {
 			return php.fileExists(context.extensionPath + path);
 		}
 	});
-	
+
 	return phpServer;
 }
 
@@ -79,7 +79,11 @@ export function activate(context: vscode.ExtensionContext) {
 			</body>
 		  </html>
 		`;
-	  });
+
+		panel.onDidDispose( () => {
+			server.close();
+		} );
+	  } );
 
 	  context.subscriptions.push( disposable );
 }

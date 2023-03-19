@@ -4,7 +4,37 @@ import * as vscode from 'vscode';
 const http = require('http');
 import { PHP, PHPServer, loadPHPRuntime, getPHPLoaderModule } from './built-php-wasm-node';
 
-async function loadPhpServer(context: vscode.ExtensionContext) {
+class PortFinder {
+	private static port: number = 5401;
+
+	public static incrementPort() {
+		return this.port++;
+	}
+
+	public static isPortFree() {
+		return new Promise( resolve => {
+			const server = http.createServer();
+
+			server.listen( this.port, () => {
+				server.close();
+				resolve( true );
+			} )
+			.on('error', () => {
+				resolve( false );
+			} );
+		} );
+	}
+
+	public static async getOpenPort() {
+		while ( ! await this.isPortFree() ) {
+			this.incrementPort();
+		}
+
+		return this.port;
+	}
+}
+
+async function loadPhpServer( context: vscode.ExtensionContext, openPort: number ) {
 	const phpLoaderModule = await getPHPLoaderModule('8.0');
 	const loaderId = await loadPHPRuntime(phpLoaderModule);
 	const php = new PHP(loaderId);
@@ -15,7 +45,7 @@ async function loadPhpServer(context: vscode.ExtensionContext) {
 	// and then mount the project directory as a plugin into the filesystem.
 	const phpServer = new PHPServer(php, {
 		documentRoot: '/wordpress',
-		absoluteUrl: 'http://localhost:5401/scope:5/',
+		absoluteUrl: `http://localhost:${openPort}/scope:5/`,
 		isStaticFilePath: (path: string) => {
 			return php.fileExists(context.extensionPath + path);
 		}
@@ -28,8 +58,9 @@ async function loadPhpServer(context: vscode.ExtensionContext) {
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('wordpress-playground.iframePlayground', async () => {
+		const openPort = await PortFinder.getOpenPort();
 
-		let phpServer = await loadPhpServer( context );
+		let phpServer = await loadPhpServer( context, openPort );
 
 		const server = http.createServer( async (req, res) => {
 			const resp = await phpServer.request({relativeUrl: req.url});
@@ -40,9 +71,9 @@ export function activate(context: vscode.ExtensionContext) {
 			res.end(resp.body);
 		});
 
-		server.listen(5401, () => {
-			console.log('Server running at http://localhost:5401/');
-		});
+		server.listen( openPort, () => {
+			console.log( `Server running at http://localhost:${openPort}/` );
+		} );
 
 		// Create a new webview panel
 		const panel = vscode.window.createWebviewPanel(
@@ -75,7 +106,7 @@ export function activate(context: vscode.ExtensionContext) {
 			  </style>
 			</head>
 			<body>
-			  <iframe src="http://localhost:5401/scope:5/index.php"></iframe>
+			  <iframe src="http://localhost:${openPort}/scope:5/index.php"></iframe>
 			</body>
 		  </html>
 		`;

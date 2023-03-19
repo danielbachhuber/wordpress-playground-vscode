@@ -12,7 +12,6 @@ const Website = ({ iframeSrc }) => {
 const el = document.getElementById('root');
 if ( el ) {
 	const iframeSrc = el.dataset.iframeSrc;
-	console.log(iframeSrc);
 	const root = createRoot(el);
 	root.render(
 		<Website iframeSrc={ iframeSrc } />

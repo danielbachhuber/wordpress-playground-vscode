@@ -106,7 +106,7 @@ export function activate(context: vscode.ExtensionContext) {
 			  </style>
 			</head>
 			<body>
-			  <iframe src="http://localhost:${openPort}/scope:5/index.php"></iframe>
+			  <iframe src="http://localhost:${openPort}/scope:5/"></iframe>
 			</body>
 		  </html>
 		`;

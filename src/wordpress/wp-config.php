@@ -2,8 +2,8 @@
 
 define( 'CONCATENATE_SCRIPTS', false );
 define( 'USE_FETCH_FOR_REQUESTS', false );
-// define( 'WP_HOME', 'http://' . $_SERVER['HTTP_HOST'] . ':' . $_SERVER['SERVER_PORT'] );
-// define( 'WP_SITEURL', 'http://' . $_SERVER['HTTP_HOST'] . ':' . $_SERVER['SERVER_PORT'] . '/wordpress' );
+define( 'WP_HOME', 'http://' . $_SERVER['HTTP_HOST'] );
+define( 'WP_SITEURL', 'http://' . $_SERVER['HTTP_HOST'] );
 
 /**
  * The base configuration for WordPress

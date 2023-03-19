@@ -1,5 +1,6 @@
 - Fix static asset loading
 - Load the local plugin into the site.
+- Restore network access
 - Allow switching between PHP and WordPress versions.
 - Use a unique Playground per project.
 - Launch in the browser by default (?)

@@ -49,7 +49,7 @@ const extensionConfig = {
   plugins: [
 	new CopyPlugin({
 		patterns: [
-			{ from: "src/wordpress", to: "wordpress" },
+			{ from: "src/wordpress.zip", to: "wordpress.zip" },
 		]
 	}),
   ]

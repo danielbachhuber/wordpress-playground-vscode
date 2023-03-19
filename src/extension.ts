@@ -138,7 +138,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 			const resp = await phpBrowser.request( {
 				relativeUrl: req.url,
-				headers: requestHeaders
+				headers: requestHeaders,
+				method: req.method,
 			} );
 
 			res.statusCode = resp.httpStatusCode;

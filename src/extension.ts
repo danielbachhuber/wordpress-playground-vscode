@@ -3,7 +3,6 @@
 import * as vscode from 'vscode';
 const http = require('http');
 import { PHP, PHPServer, loadPHPRuntime, getPHPLoaderModule, PHPBrowser } from './built-php-wasm-node';
-
 class PortFinder {
 	private static port: number = 5401;
 
@@ -54,6 +53,9 @@ async function login(
 	});
 }
 
+function seemsLikeAPHPFile(path: string) {
+	return path.endsWith('.php') || path.includes('.php/');
+}
 async function loadPhpBrowser( context: vscode.ExtensionContext, openPort: number ) {
 	const phpLoaderModule = await getPHPLoaderModule('8.0');
 	const loaderId = await loadPHPRuntime(phpLoaderModule);
@@ -65,10 +67,12 @@ async function loadPhpBrowser( context: vscode.ExtensionContext, openPort: numbe
 		documentRoot: '/wordpress',
 		absoluteUrl: `http://localhost:${openPort}/scope:5/`,
 		isStaticFilePath: (path: string) => {
-			return php.fileExists(context.extensionPath + path);
+			const fullPath = context.extensionPath + path;
+			return php.fileExists(fullPath)
+				&& ! php.isDir(fullPath)
+				&& ! seemsLikeAPHPFile(fullPath);
 		}
 	});
-
 	const browser = new PHPBrowser( phpServer );
 
 	await login( browser );

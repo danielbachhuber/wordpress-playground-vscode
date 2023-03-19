@@ -65,7 +65,7 @@ async function loadPhpBrowser( context: vscode.ExtensionContext, openPort: numbe
 
 	const phpServer = new PHPServer(php, {
 		documentRoot: '/wordpress',
-		absoluteUrl: `http://localhost:${openPort}/scope:5/`,
+		absoluteUrl: `http://localhost:${openPort}/`,
 		isStaticFilePath: (path: string) => {
 			const fullPath = '/wordpress' + path;
 			return php.fileExists(fullPath)
@@ -132,7 +132,7 @@ export function activate(context: vscode.ExtensionContext) {
 			  </style>
 			</head>
 			<body>
-				<iframe src="http://localhost:${openPort}/scope:5/"></iframe>
+				<iframe src="http://localhost:${openPort}/"></iframe>
 			</body>
 		  </html>
 		`;

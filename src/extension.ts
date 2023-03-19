@@ -79,8 +79,6 @@ async function loadPhpBrowser( context: vscode.ExtensionContext, openPort: numbe
 
 	php.writeFile( '/wordpress.zip', wordpressZip );
 
-	const file = php.readFileAsText( '/wordpress.zip' );
-
 	const databaseFromZipFileReadRequest = php.run({
 		code:
 		importPhp +

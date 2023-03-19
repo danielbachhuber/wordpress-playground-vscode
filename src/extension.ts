@@ -172,7 +172,7 @@ export function activate(context: vscode.ExtensionContext) {
 			<head>
 			  <meta charset="UTF-8">
 			  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-			  <title>Playground</title>
+			  <title>WordPress Playground</title>
 			  <style type="text/css">
 			  * {
 					box-sizing: border-box;

@@ -15,7 +15,7 @@
     "commands": [
       {
         "command": "wordpress-playground.iframePlayground",
-        "title": "Launch Playground"
+        "title": "Launch WordPress Playground"
       }
     ]
   },

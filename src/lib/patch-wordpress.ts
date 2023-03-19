@@ -38,12 +38,17 @@ class WordPressPatcher {
 		for (const transport of transports) {
 			// One of the transports might not exist in the latest WordPress version.
 			if (!this.#php.fileExists(transport)) {continue;}
-			this.#patchFile(transport, (contents) =>
-				contents.replace(
+			this.#patchFile(transport, ( contents ) => {
+				// If contents contains function test2, make no change.
+				if ( contents.includes( 'public static function test2' ) ) {
+					return contents;
+				}
+
+				return contents.replace(
 					'public static function test',
 					'public static function test( $capabilities = array() ) { return false; } public static function test2'
-				)
-			);
+				);
+			} );
 		}
 	}
 	#patchFile(path: string, callback: (contents: string) => string) {

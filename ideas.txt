@@ -8,3 +8,4 @@
 - Run WP-CLI commands against the site.
 - Figure out bug reproduction workflow
 - Test performance vs. Docker and Local
+- Move ideas to GitHub issues

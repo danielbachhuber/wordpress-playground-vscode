@@ -136,10 +136,21 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 			}
 
+			const reqBody = await new Promise( (resolve, reject) => {
+				let body = '';
+				req.on('data', chunk => {
+					body += chunk.toString(); // convert Buffer to string
+				});
+				req.on('end', () => {
+					resolve(body);
+				});
+			});
+
 			const resp = await phpBrowser.request( {
 				relativeUrl: req.url,
 				headers: requestHeaders,
 				method: req.method,
+				body: reqBody,
 			} );
 
 			res.statusCode = resp.httpStatusCode;

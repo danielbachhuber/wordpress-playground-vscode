@@ -1,0 +1,7 @@
+- Load the local filesystem into the site.
+- Allow switching between PHP and WordPress versions.
+- Use a unique Playground per project.
+- Launch in the browser by default (?)
+- Provide direction on how to debug PHP code.
+- Run WP-CLI commands against the site.
+

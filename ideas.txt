@@ -6,4 +6,5 @@
 - Launch in the browser by default (?)
 - Provide direction on how to debug PHP code.
 - Run WP-CLI commands against the site.
-
+- Figure out bug reproduction workflow
+- Test performance vs. Docker and Local

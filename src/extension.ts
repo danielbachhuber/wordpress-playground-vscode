@@ -31,10 +31,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 		let phpServer = await loadPhpServer( context );
 
-		// TODO generate a wp-config and install WordPress.
-		// wp-config.php can be hardcoded and we can also directly load a sqlite
-		// database into the virtual filesystem.
-
 		const server = http.createServer( async (req, res) => {
 			const resp = await phpServer.request({relativeUrl: req.url});
 			res.statusCode = resp.httpStatusCode;

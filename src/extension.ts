@@ -155,7 +155,7 @@ export function activate(context: vscode.ExtensionContext) {
 		// Create a new webview panel
 		const panel = vscode.window.createWebviewPanel(
 			'playgroundviewer',
-			'Playground',
+			'WordPress Playground',
 			vscode.ViewColumn.One,
 			{
 			  enableScripts: true,

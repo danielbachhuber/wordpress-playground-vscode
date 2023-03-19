@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 const http = require('http');
 import { PHP, PHPServer, loadPHPRuntime, getPHPLoaderModule, PHPBrowser } from './built-php-wasm-node';
+import patchWordPress from './lib/patch-wordpress';
 class PortFinder {
 	private static port: number = 5401;
 
@@ -62,6 +63,7 @@ async function loadPhpBrowser( context: vscode.ExtensionContext, openPort: numbe
 	const php = new PHP(loaderId);
 	php.mkdirTree('/wordpress');
 	php.mount({root: context.extensionPath + '/dist/wordpress'} as any, '/wordpress');
+	patchWordPress(php);
 
 	const phpServer = new PHPServer(php, {
 		documentRoot: '/wordpress',

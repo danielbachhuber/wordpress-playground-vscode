@@ -90,7 +90,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		let phpBrowser = await loadPhpBrowser( context, openPort );
 
-		const server = http.createServer( async (req, res) => {
+		const server = http.createServer( async (req : any, res : any) => {
 			const resp = await phpBrowser.request({relativeUrl: req.url});
 			res.statusCode = resp.httpStatusCode;
 			Object.keys(resp.headers).forEach((key) => {

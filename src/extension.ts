@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 const http = require('http');
-import { PHP, PHPServer, loadPHPRuntime, getPHPLoaderModule } from './built-php-wasm-node';
+import { PHP, PHPServer, loadPHPRuntime, getPHPLoaderModule, PHPBrowser } from './built-php-wasm-node';
 
 class PortFinder {
 	private static port: number = 5401;
@@ -34,15 +34,33 @@ class PortFinder {
 	}
 }
 
-async function loadPhpServer( context: vscode.ExtensionContext, openPort: number ) {
+async function login(
+	playground: PHPBrowser,
+	user = 'admin',
+	password = 'password'
+) {
+	await playground.request({
+		relativeUrl: '/wp-login.php',
+	});
+
+	await playground.request({
+		relativeUrl: '/wp-login.php',
+		method: 'POST',
+		formData: {
+			log: user,
+			pwd: password,
+			rememberme: 'forever',
+		},
+	});
+}
+
+async function loadPhpBrowser( context: vscode.ExtensionContext, openPort: number ) {
 	const phpLoaderModule = await getPHPLoaderModule('8.0');
 	const loaderId = await loadPHPRuntime(phpLoaderModule);
 	const php = new PHP(loaderId);
 	php.mkdirTree('/wordpress');
 	php.mount({root: context.extensionPath + '/dist/wordpress'} as any, '/wordpress');
-	// TODO Instead of mounting WordPress to documentRoot,
-	// we need to load all WordPress files into the virtual filesystem,
-	// and then mount the project directory as a plugin into the filesystem.
+
 	const phpServer = new PHPServer(php, {
 		documentRoot: '/wordpress',
 		absoluteUrl: `http://localhost:${openPort}/scope:5/`,
@@ -51,7 +69,11 @@ async function loadPhpServer( context: vscode.ExtensionContext, openPort: number
 		}
 	});
 
-	return phpServer;
+	const browser = new PHPBrowser( phpServer );
+
+	await login( browser );
+
+	return browser;
 }
 
 // This method is called when your extension is activated
@@ -60,10 +82,10 @@ export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('wordpress-playground.iframePlayground', async () => {
 		const openPort = await PortFinder.getOpenPort();
 
-		let phpServer = await loadPhpServer( context, openPort );
+		let phpBrowser = await loadPhpBrowser( context, openPort );
 
 		const server = http.createServer( async (req, res) => {
-			const resp = await phpServer.request({relativeUrl: req.url});
+			const resp = await phpBrowser.request({relativeUrl: req.url});
 			res.statusCode = resp.httpStatusCode;
 			Object.keys(resp.headers).forEach((key) => {
 				res.setHeader(key, resp.headers[key]);
@@ -106,7 +128,7 @@ export function activate(context: vscode.ExtensionContext) {
 			  </style>
 			</head>
 			<body>
-			  <iframe src="http://localhost:${openPort}/scope:5/"></iframe>
+				<iframe src="http://localhost:${openPort}/scope:5/"></iframe>
 			</body>
 		  </html>
 		`;

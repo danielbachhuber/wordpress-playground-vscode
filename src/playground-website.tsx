@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import BrowserChrome from './playground-website/browser-chrome';
+import BrowserChrome from './playground-website-components/browser-chrome';
 
 const Website = ({ iframeSrc }) => {
 	return (

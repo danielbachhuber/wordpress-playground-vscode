@@ -91,8 +91,10 @@ async function loadPhpBrowser( context: vscode.ExtensionContext, openPort: numbe
 		console.log( databaseFromZipFileReadRequest.errors );
 	}
 
-	php.mkdirTree( `/wordpress/wp-content/plugins/${path.basename( pluginPath )}` )
-	php.mount({root: pluginPath} as any, `/wordpress/wp-content/plugins/${path.basename( pluginPath )}` );
+	if ( pluginPath ) {
+		php.mkdirTree( `/wordpress/wp-content/plugins/${path.basename( pluginPath )}` );
+		php.mount({root: pluginPath} as any, `/wordpress/wp-content/plugins/${path.basename( pluginPath )}` );
+	}
 
 	patchWordPress(php);
 

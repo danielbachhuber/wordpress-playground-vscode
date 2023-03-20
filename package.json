@@ -2,6 +2,7 @@
   "name": "wordpress-playground",
   "displayName": "WordPress Playground for VS Code",
   "description": "Embeds a WordPress installation in your your VS Code",
+  "license": "MIT",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.76.0"

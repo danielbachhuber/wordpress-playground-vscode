@@ -136,7 +136,7 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 			const params = url.parse(req.url, true).query;
 			const phpVersion = params.php;
-			console.log( "PHP",phpVersion, req.url, params );
+			// console.log( "PHP",phpVersion, req.url, params );
 			
 			if (phpVersion) {
 				phpBrowser = await loadPhpBrowser( context, openPort, pluginPath, phpVersion); 
@@ -230,9 +230,6 @@ export function activate(context: vscode.ExtensionContext) {
 			</body>
 		  </html>
 		`;
-    //var select = panel.webview.
-    ///getElementById('mySelect');
-//var value = select.options[select.selectedIndex].value;
 
 		panel.onDidDispose( () => {
 			server.close();

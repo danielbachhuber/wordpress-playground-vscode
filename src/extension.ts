@@ -181,7 +181,7 @@ export function activate(context: vscode.ExtensionContext) {
 		  );
 
 		const onDiskPath = vscode.Uri.joinPath(context.extensionUri, 'dist', 'playground-website.js');
-		const playgroundWebsiteJsSrc = panel.webview.asWebviewUri(onDiskPath);
+		const websiteJsSrc = panel.webview.asWebviewUri(onDiskPath);
 
 		// Set the content of the webview panel to an iframe that loads a website URL
 		panel.webview.html = `
@@ -226,7 +226,7 @@ export function activate(context: vscode.ExtensionContext) {
 			</head>
 			<body class="with-background">
 				<div id="root" data-iframe-src="http://localhost:${openPort}/"></div>
-				<script src="${playgroundWebsiteJsSrc}"></script>
+				<script src="${websiteJsSrc}"></script>
 			</body>
 		  </html>
 		`;

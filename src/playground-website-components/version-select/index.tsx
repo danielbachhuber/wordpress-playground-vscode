@@ -3,6 +3,7 @@ import React from 'react';
 type SelectorProps = {
 	name: string;
 	versions: string[];
+	onChange: (version: string) => void;
 };
 
 export default function PHPSelector(props: SelectorProps) {
@@ -10,11 +11,7 @@ export default function PHPSelector(props: SelectorProps) {
 		<select
 			id={props.name + '-version'}
 			onChange={(event) => {
-				console.log(window.location.toString());
-				const url = new URL(window.location.toString());
-				url.searchParams.set(props.name, event.target.value);
-				console.log("FINAL URL: ",url);
-				//window.location.assign(url);
+				props.onChange(event.target.value);	
 			}}
 		>
 			{props.versions.map((value) => (

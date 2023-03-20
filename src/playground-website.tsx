@@ -3,7 +3,7 @@ import BrowserChrome from './playground-website-components/browser-chrome';
 import VersionSelector from './playground-website-components/version-select';
 
 
-const Website = ({ iframeSrc }) => {
+const Website = ({ iframeSrc } : { iframeSrc: string }) => {
 	const phpVersions = ['8.2', '8.0', '7.4', '7.3', '7.2'];
 	const wpVersions = ['5.9', '6.0', '6.1'];
 
@@ -20,7 +20,7 @@ const Website = ({ iframeSrc }) => {
 
 const el = document.getElementById('root');
 if ( el ) {
-	const iframeSrc = el.dataset.iframeSrc;
+	const iframeSrc = el.dataset.iframeSrc ? el.dataset.iframeSrc : '';
 	const root = createRoot(el);
 	root.render(
 		<Website iframeSrc={ iframeSrc } />

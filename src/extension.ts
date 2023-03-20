@@ -144,13 +144,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 			const reqBody = await new Promise( (resolve, reject) => {
 				let body = '';
-				req.on('data', chunk => {
+				req.on('data', (chunk: any) => {
 					body += chunk.toString(); // convert Buffer to string
 				});
 				req.on('end', () => {
 					resolve(body);
 				});
-			});
+			}) as string;
 
 			const resp = await phpBrowser.request( {
 				relativeUrl: req.url,

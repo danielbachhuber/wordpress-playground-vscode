@@ -23,6 +23,9 @@ Place the `index.js` inside `wordpress-playground/dist/packages/php-wasm/node` a
 
 ## Release Notes
 
+### 0.0.2
+
+Hopefully fix the bug.
 ### 0.0.1
 
 Initial release of WordPress Playground for VS Code.

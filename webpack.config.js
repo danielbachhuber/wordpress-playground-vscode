@@ -30,6 +30,9 @@ const extensionConfig = {
     extensions: ['.tsx', '.ts', '.js']
   },
   module: {
+    parser: {
+      javascript: { importMeta: false }
+    },
     rules: [
       {
         test: /\.ts$/,

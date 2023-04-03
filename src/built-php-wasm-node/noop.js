@@ -1,1 +1,0 @@
-import { createRequire } from 'module';const real_require = createRequire(import.meta.url); function require(id) { let resolved = real_require(id); if(id === 'path') {return {...resolved,normalize: function(path) {return new URL(resolved.normalize(path), import.meta.url).href.replace(/^(file:\/\/)?/, '');}};} return resolved;} const __dirname = new URL(import.meta.url).href;

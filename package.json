@@ -4,7 +4,7 @@
   "description": "Embeds a WordPress installation in your your VS Code",
   "license": "dual (GPLv2 and MPLv2)",
   "publisher": "WordPressPlayground",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "engines": {
     "vscode": "^1.77.0"
   },
@@ -24,6 +24,7 @@
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
+    "build": "esbuild ./extension.src.js --format=cjs --bundle --platform=node --external:vscode --define:import.meta.url='__dirname' --define:import.meta.env.TEST=false | sed 's/\".\/php_/__dirname+\"\/php_/g' > extension.js",
     "test": "node ./test/runTest.js"
   },
   "devDependencies": {

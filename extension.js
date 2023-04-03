@@ -8,7 +8,7 @@ function activate(context) {
 
 	let disposable = vscode.commands.registerCommand('wordpress-playground.serve', async () => {
 		if (!siteUrl) {
-			await runWordPressServer(
+			siteUrl = await runWordPressServer(
 				vscode.workspace.workspaceFolders[0].uri.fsPath
 			)
 		}

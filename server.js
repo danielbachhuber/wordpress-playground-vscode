@@ -1,8 +1,9 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import path from 'path';
-import fs from 'fs';
-import express from 'express';
+const path = require('path');
+const fs = require('fs');
+const express = require('express');
+const { getPHPLoaderModule, loadPHPRuntime, PHP, PHPBrowser, PHPServer } = require('@php-wasm/node');
 
 // const l = m => (console.log(m), m);
 
@@ -48,8 +49,6 @@ async function runWordPressServer(workspacePath, requestedPort) {
     })
 
     // fetchAsUint8Array('https://wordpress.org/latest.zip')
-
-    const { getPHPLoaderModule, loadPHPRuntime, PHP, PHPBrowser, PHPServer } = await import('@php-wasm/node');
 
     const php = new PHP(await loadPHPRuntime(await getPHPLoaderModule('8.0')));
 

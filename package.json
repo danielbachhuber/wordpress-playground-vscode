@@ -39,7 +39,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@php-wasm/node": "vscode",
+    "@php-wasm/node": "^0.1.16",
     "@wp-playground/client": "^0.1.9",
     "express": "^4.18.2",
     "node-fetch": "^3.3.1"

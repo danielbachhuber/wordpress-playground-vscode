@@ -3,12 +3,15 @@
 const vscode = require('vscode');
 const { runWordPressServer } = require('./server');
 
-async function activate(context) {
-	const siteUrl = await runWordPressServer(
-		vscode.workspace.workspaceFolders[0].uri.fsPath
-	);
+function activate(context) {
+	let siteUrl;
 
-	let disposable = vscode.commands.registerCommand('wordpress-playground.serve', () => {
+	let disposable = vscode.commands.registerCommand('wordpress-playground.serve', async () => {
+		if (!siteUrl) {
+			await runWordPressServer(
+				vscode.workspace.workspaceFolders[0].uri.fsPath
+			)
+		}
 		// Open siteUrl in the browser
 		vscode.env.openExternal(vscode.Uri.parse(siteUrl));
 	} );

@@ -24,7 +24,6 @@
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
-    "build": "esbuild ./extension.src.js --format=cjs --bundle --platform=node --external:vscode --define:import.meta.url='__dirname' --define:import.meta.env.TEST=false | sed 's/\".\/php_/__dirname+\"\/php_/g' > extension.js",
     "test": "node ./test/runTest.js"
   },
   "devDependencies": {

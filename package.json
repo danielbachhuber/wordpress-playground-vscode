@@ -22,6 +22,7 @@
     ]
   },
   "scripts": {
+    "start": "node server.js",
     "lint": "eslint .",
     "pretest": "npm run lint",
     "test": "node ./test/runTest.js"
@@ -38,9 +39,10 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@php-wasm/node": "^0.1.16",
-    "@wp-playground/client": "^0.1.9",
+    "@php-wasm/node": "^0.1.24",
+    "@wp-playground/client": "^0.1.23",
     "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
     "node-fetch": "^3.3.1"
   }
 }

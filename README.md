@@ -2,6 +2,8 @@
 
 This Visual Studio Code extension allows you to quickly create a WordPress playground for testing your code. It was initially created as part of Cloudfest Hackathon 2023.
 
+**IMPORTANT**: This project moved to [WordPress/wordpress-playground](https://github.com/WordPress/wordpress-playground)
+
 ## Features
 
 This extension allows you to create a WordPress playground with a single command. Simply run the command `Launch WordPress Playground` while within a file in the root directory of your plugin and the extension will open up a panel that includes a locally running WordPress instance with your plugin running.
